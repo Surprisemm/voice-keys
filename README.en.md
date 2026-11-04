@@ -8,7 +8,7 @@ A voice controller for Windows: say a word and the program presses a key (or hol
 
 This is a personal project: I built it for myself, as a person with a disability, to interact with my computer more comfortably and to press keys in games without using my hands. The app was "vibe-coded" with Claude and ChatGPT: I set the tasks and checked the results, the models wrote the code. It is not only for games: it is just as useful for everyday work at the computer, since any word can be bound to any key or key combination, mouse button or wheel.
 
-The project is shared as is, without warranty, in the hope that it helps others too. Suggestions and bug reports are welcome in [Issues](https://github.com/Surprisemm/voice-keys/issues).
+The project is shared as is, without warranty. Suggestions and bug reports are welcome in [Issues](https://github.com/Surprisemm/voice-keys/issues).
 
 ## Fair play
 
