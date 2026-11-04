@@ -1,0 +1,90 @@
+{
+  "version": "1.3.0",
+  "created": "2026-10-28T15:41:40.630Z",
+  "checks": [
+    {
+      "name": "tap duration is hidden",
+      "ok": true
+    },
+    {
+      "name": "profiles create, edit, switch without losing mappings",
+      "ok": true
+    },
+    {
+      "name": "overlay pending is bright and executed commands are half opacity",
+      "ok": true
+    },
+    {
+      "name": "vertical overlay, retention and hidden empty strip",
+      "ok": true
+    },
+    {
+      "name": "real Vosk audio: first first first second -> Q Q Q W",
+      "ok": true
+    },
+    {
+      "name": "English repeated audio with distinct echo and radio commands",
+      "ok": true
+    },
+    {
+      "name": "revised prefix continues repeated commands without replaying final result",
+      "ok": true
+    },
+    {
+      "name": "quick profile switch stops listening and changes commands",
+      "ok": true
+    },
+    {
+      "name": "record button saves local WAV in active profile",
+      "ok": true
+    },
+    {
+      "name": "Vosk voice sample benchmark records decode time without key events",
+      "ok": true
+    },
+    {
+      "name": "T-one voice sample benchmark records decode time",
+      "ok": true
+    },
+    {
+      "name": "compact layout and both language mappings",
+      "ok": true
+    },
+    {
+      "name": "metrics, backup and no error-level logs",
+      "ok": true,
+      "detail": {
+        "metrics": [
+          {
+            "model": "vosk",
+            "decodeMs": 363.80000000074506,
+            "audioMs": 1454,
+            "text": "первый"
+          },
+          {
+            "model": "sherpa",
+            "decodeMs": 68.09999999776483,
+            "audioMs": 1454,
+            "text": "первый"
+          }
+        ]
+      }
+    }
+  ],
+  "benchmarks": [],
+  "observations": [
+    {
+      "name": "English ASR ambiguity for queue repeated rapidly",
+      "recognizedKeys": [
+        "Q",
+        "Q",
+        "R",
+        "R",
+        "R"
+      ],
+      "note": "In this fixture Vosk can revise q q to pew pew pew. Unknown words are not force-mapped to Q."
+    }
+  ],
+  "directory": "<work directory>",
+  "ok": true
+}

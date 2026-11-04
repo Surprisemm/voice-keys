@@ -1,0 +1,154 @@
+{
+  "version": "1.2.0",
+  "created": "2026-10-28T15:09:01.554Z",
+  "checks": [
+    {
+      "name": "Vosk natural final",
+      "ok": true
+    },
+    {
+      "name": "Vosk phrase 250ms",
+      "ok": true
+    },
+    {
+      "name": "Vosk words 100ms",
+      "ok": true
+    },
+    {
+      "name": "T-one words 100ms",
+      "ok": true
+    },
+    {
+      "name": "T-one phrase 250ms",
+      "ok": true
+    },
+    {
+      "name": "real tap and 1000ms hold on Q",
+      "ok": true,
+      "detail": {
+        "actualHoldMs": 1009
+      }
+    },
+    {
+      "name": "next spoken key W received",
+      "ok": true
+    },
+    {
+      "name": "stop releases hold and cancels queued same-key command",
+      "ok": true
+    },
+    {
+      "name": "compact layout",
+      "ok": true
+    },
+    {
+      "name": "no renderer errors",
+      "ok": true
+    },
+    {
+      "name": "no error-level application logs",
+      "ok": true
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "Vosk natural final",
+      "actions": [
+        {
+          "key": "Q",
+          "relativeMs": 2321,
+          "afterWordEndMs": 1375,
+          "provisional": false
+        }
+      ],
+      "wordEndsMs": [
+        945
+      ]
+    },
+    {
+      "name": "Vosk phrase 250ms",
+      "actions": [
+        {
+          "key": "Q",
+          "relativeMs": 1251,
+          "afterWordEndMs": 305,
+          "provisional": false
+        }
+      ],
+      "wordEndsMs": [
+        945
+      ]
+    },
+    {
+      "name": "Vosk words 100ms",
+      "actions": [
+        {
+          "key": "Q",
+          "relativeMs": 1242,
+          "afterWordEndMs": 297,
+          "provisional": true
+        },
+        {
+          "key": "W",
+          "relativeMs": 1700,
+          "afterWordEndMs": 74,
+          "provisional": true
+        },
+        {
+          "key": "E",
+          "relativeMs": 2167,
+          "afterWordEndMs": -108,
+          "provisional": true
+        }
+      ],
+      "wordEndsMs": [
+        945,
+        1627,
+        2275
+      ]
+    },
+    {
+      "name": "T-one words 100ms",
+      "actions": [
+        {
+          "key": "Q",
+          "relativeMs": 1908,
+          "afterWordEndMs": 963,
+          "provisional": true
+        },
+        {
+          "key": "W",
+          "relativeMs": 2461,
+          "afterWordEndMs": 834,
+          "provisional": false
+        },
+        {
+          "key": "E",
+          "relativeMs": 2461,
+          "afterWordEndMs": 186,
+          "provisional": false
+        }
+      ],
+      "wordEndsMs": [
+        945,
+        1627,
+        2275
+      ]
+    },
+    {
+      "name": "T-one phrase 250ms",
+      "actions": [
+        {
+          "key": "Q",
+          "relativeMs": 1191,
+          "afterWordEndMs": 246,
+          "provisional": false
+        }
+      ],
+      "wordEndsMs": [
+        945
+      ]
+    }
+  ],
+  "ok": true
+}

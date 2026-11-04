@@ -1,0 +1,35 @@
+[
+  {
+    "name": "model selectable and installed",
+    "ok": true
+  },
+  {
+    "name": "single word",
+    "ok": true,
+    "detail": "{\"keys\":[\"Q\"],\"relativeMs\":[968],\"wordEndsMs\":[945]}"
+  },
+  {
+    "name": "three words in order",
+    "ok": true,
+    "detail": "{\"keys\":[\"Q\",\"W\",\"E\"],\"relativeMs\":[921,1554,2184],\"wordEndsMs\":[945,1627,2275]}"
+  },
+  {
+    "name": "repeated word",
+    "ok": true,
+    "detail": "[\"Q\",\"Q\",\"Q\"]"
+  },
+  {
+    "name": "final texts",
+    "ok": true,
+    "detail": "[\"первый первый первый\"]"
+  },
+  {
+    "name": "latency",
+    "ok": true,
+    "detail": "После появления слова: 115 мс (ожидание 112 + очередь 3) | От начала речи: 1585 мс, из них до слова в тексте 1470 | Среднее за 7: 117 мс / от речи 982 мс"
+  },
+  {
+    "name": "no errors in the log",
+    "ok": true
+  }
+]

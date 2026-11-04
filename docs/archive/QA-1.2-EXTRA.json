@@ -1,0 +1,22 @@
+{
+  "version": "1.2.0",
+  "created": "2026-10-28T15:11:39.094Z",
+  "checks": [
+    {
+      "name": "English word sequence queue echo radio",
+      "ok": true
+    },
+    {
+      "name": "compact layout with hold actions and both languages",
+      "ok": true
+    }
+  ],
+  "benchmarks": [],
+  "skipped": [
+    {
+      "name": "additional native same-key queue",
+      "reason": "Foreground guard: own window was not active. Main native tap/hold/stop checks passed separately in QA-1.2-RESULTS.json."
+    }
+  ],
+  "ok": true
+}

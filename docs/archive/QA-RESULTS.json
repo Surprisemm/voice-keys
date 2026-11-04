@@ -1,0 +1,353 @@
+{
+  "version": "1.1.0",
+  "created": "2026-10-28T14:20:34.482Z",
+  "checks": [
+    {
+      "name": "actual-Windows-microphone-names",
+      "ok": true,
+      "detail": [
+        "По умолчанию — Analogue 1 + 2 (Focusrite USB Audio)",
+        "Analogue 1 + 2 (Focusrite USB Audio)",
+        "Headset Microphone (Wireless Controller) (054c:0ce6)",
+        "Микрофон (G435 Wireless Gaming Headset) (046d:0acb)"
+      ]
+    },
+    {
+      "name": "ru-language-filter",
+      "ok": true
+    },
+    {
+      "name": "microphone-stream-to-preview-Q",
+      "ok": true
+    },
+    {
+      "name": "ru-audio-suite",
+      "ok": true,
+      "detail": "12 utterances"
+    },
+    {
+      "name": "physical-key-assignment",
+      "ok": true
+    },
+    {
+      "name": "real-Windows-input-KeyQ",
+      "ok": true
+    },
+    {
+      "name": "no-input-after-stop",
+      "ok": true
+    },
+    {
+      "name": "compact-layout-no-horizontal-overflow",
+      "ok": true
+    },
+    {
+      "name": "large-layout-no-horizontal-overflow",
+      "ok": true
+    },
+    {
+      "name": "ru-no-renderer-errors",
+      "ok": true
+    },
+    {
+      "name": "ru-no-error-logs",
+      "ok": true
+    },
+    {
+      "name": "en-language-filter",
+      "ok": true
+    },
+    {
+      "name": "en-audio-suite",
+      "ok": true,
+      "detail": "9 utterances"
+    },
+    {
+      "name": "en-no-renderer-errors",
+      "ok": true
+    },
+    {
+      "name": "en-no-error-logs",
+      "ok": true
+    }
+  ],
+  "audio": [
+    {
+      "id": "ru-first",
+      "spoken": "первый",
+      "expectedKey": "Q",
+      "recognized": "первый",
+      "confidence": [
+        1
+      ],
+      "actualKey": "Q",
+      "rejection": null
+    },
+    {
+      "id": "ru-second",
+      "spoken": "второй",
+      "expectedKey": "W",
+      "recognized": "второй",
+      "confidence": [
+        1
+      ],
+      "actualKey": "W",
+      "rejection": null
+    },
+    {
+      "id": "ru-third",
+      "spoken": "третий",
+      "expectedKey": "E",
+      "recognized": "третий",
+      "confidence": [
+        1
+      ],
+      "actualKey": "E",
+      "rejection": null
+    },
+    {
+      "id": "ru-fourth",
+      "spoken": "четвёртый",
+      "expectedKey": "R",
+      "recognized": "четвёртый",
+      "confidence": [
+        1
+      ],
+      "actualKey": "R",
+      "rejection": null
+    },
+    {
+      "id": "ru-check",
+      "spoken": "проверка",
+      "expectedKey": "T",
+      "recognized": "проверка",
+      "confidence": [
+        1
+      ],
+      "actualKey": "T",
+      "rejection": null
+    },
+    {
+      "id": "ru-negative-first",
+      "spoken": "первый день отпуска",
+      "expectedKey": "",
+      "recognized": "первый день отпуска",
+      "confidence": [
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "ru-negative-second",
+      "spoken": "второй раз я не буду это делать",
+      "expectedKey": "",
+      "recognized": "второй раз я не буду это делать",
+      "confidence": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "ru-negative-third",
+      "spoken": "третий этаж находится выше",
+      "expectedKey": "",
+      "recognized": "третий этаж находится выше",
+      "confidence": [
+        1,
+        1,
+        0.768568,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "ru-negative-fourth",
+      "spoken": "это четвёртый пункт нашего плана",
+      "expectedKey": "",
+      "recognized": "это четвёртый пункт нашего плана",
+      "confidence": [
+        0.757088,
+        1,
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "ru-negative-check",
+      "spoken": "сейчас идёт проверка оборудования",
+      "expectedKey": "",
+      "recognized": "сейчас идёт проверка оборудования",
+      "confidence": [
+        1,
+        1,
+        1,
+        0.54241
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "ru-negative-talk",
+      "spoken": "сегодня хорошая погода и мы идём гулять",
+      "expectedKey": "",
+      "recognized": "сегодня хорошая погода и мы идём гулять",
+      "confidence": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "ru-negative-no",
+      "spoken": "не нажимай первый",
+      "expectedKey": "",
+      "recognized": "не нажимай первый",
+      "confidence": [
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "en-queue",
+      "spoken": "queue",
+      "expectedKey": "Q",
+      "recognized": "q",
+      "confidence": [
+        1
+      ],
+      "actualKey": "Q",
+      "rejection": null
+    },
+    {
+      "id": "en-double-you",
+      "spoken": "double you",
+      "expectedKey": "W",
+      "recognized": "w",
+      "confidence": [
+        1
+      ],
+      "actualKey": "W",
+      "rejection": null
+    },
+    {
+      "id": "en-e",
+      "spoken": "e",
+      "expectedKey": "",
+      "recognized": "he",
+      "confidence": [
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "en-are",
+      "spoken": "are",
+      "expectedKey": "",
+      "recognized": "our",
+      "confidence": [
+        0.648231
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "en-negative-queue",
+      "spoken": "there is a queue outside the building",
+      "expectedKey": "",
+      "recognized": "there is a queue outside the building",
+      "confidence": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "en-negative-talk",
+      "spoken": "today is a nice day to go for a walk",
+      "expectedKey": "",
+      "recognized": "today is a nice day to go for a walk",
+      "confidence": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "en-negative-are",
+      "spoken": "we are testing the microphone",
+      "expectedKey": "",
+      "recognized": "we are testing the microphone",
+      "confidence": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "actualKey": "",
+      "rejection": "phrase_not_configured"
+    },
+    {
+      "id": "en-echo",
+      "spoken": "echo",
+      "expectedKey": "E",
+      "recognized": "echo",
+      "confidence": [
+        1
+      ],
+      "actualKey": "E",
+      "rejection": null
+    },
+    {
+      "id": "en-radio",
+      "spoken": "radio",
+      "expectedKey": "R",
+      "recognized": "radio",
+      "confidence": [
+        1
+      ],
+      "actualKey": "R",
+      "rejection": null
+    }
+  ],
+  "ok": true
+}

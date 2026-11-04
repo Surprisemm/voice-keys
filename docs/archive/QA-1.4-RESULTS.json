@@ -1,0 +1,32 @@
+[
+  {
+    "name": "header sticks to top after scrolling",
+    "ok": true,
+    "detail": "{\"y\":270,\"top\":0,\"h\":270}"
+  },
+  {
+    "name": "duration field appears only on the hold row; no duration column",
+    "ok": true,
+    "detail": "{\"cols\":5,\"visible\":[true,false,false,false,false,false,false,false]}"
+  },
+  {
+    "name": "three utterances were captured",
+    "ok": true,
+    "detail": "[\"к\",\"к\",\"к\"]"
+  },
+  {
+    "name": "heard variants were written to the row",
+    "ok": true,
+    "detail": "{\"phrase\":\"к\",\"learned\":\"[\\\"к\\\"]\",\"open\":false}"
+  },
+  {
+    "name": "saved config keeps phrases and learned flags",
+    "ok": true,
+    "detail": "{\"id\":\"83aba104-f731-4aad-ad9a-bf76eba27a8f\",\"phrase\":\"к\",\"phrases\":[\"к\"],\"learned\":[\"к\"],\"language\":\"ru\",\"key\":\"T\",\"actionType\":\"tap\",\"durationMs\":65}"
+  },
+  {
+    "name": "learned variant fires its key",
+    "ok": true,
+    "detail": "[{\"key\":\"T\",\"phrase\":\"к\",\"ok\":true}]"
+  }
+]

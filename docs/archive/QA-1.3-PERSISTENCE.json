@@ -1,0 +1,18 @@
+{
+  "version": "1.3.0",
+  "checks": [
+    {
+      "name": "profiles and samples persist after restart; listening is off",
+      "ok": true
+    },
+    {
+      "name": "profile copy and confirmed deletion in UI",
+      "ok": true
+    },
+    {
+      "name": "horizontal and vertical overlay visual checks",
+      "ok": true
+    }
+  ],
+  "ok": true
+}

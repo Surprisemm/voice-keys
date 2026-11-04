@@ -1,0 +1,9 @@
+{
+  "version": "1.3.0",
+  "created": "2026-10-28T15:38:18.643Z",
+  "checks": [],
+  "benchmarks": [],
+  "ok": null,
+  "status": "not_run",
+  "reason": "Foreground guard before native input\n+ actual - expected\n\n+ 394770\n- 1902758\n"
+}

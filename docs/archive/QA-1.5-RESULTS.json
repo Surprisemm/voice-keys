@@ -1,0 +1,41 @@
+[
+  {
+    "name": "modifier and wheel saved; wheel stays a tap",
+    "ok": true,
+    "detail": "[{\"key\":\"Q\",\"modifiers\":[\"CTRL\"],\"actionType\":\"tap\"},{\"key\":\"WHEEL_UP\",\"modifiers\":[],\"actionType\":\"tap\"}]"
+  },
+  {
+    "name": "actions carry modifier / wheel labels",
+    "ok": true,
+    "detail": "[\"Колесо ↑\"]"
+  },
+  {
+    "name": "latency panel filled",
+    "ok": true,
+    "detail": "После появления слова: 3 мс (ожидание 0 + очередь 3) | От начала речи: 252 мс, из них до слова в тексте 249 | Среднее за 2: 4 мс / от речи 253 мс"
+  },
+  {
+    "name": "journal word assigned without stopping the listener",
+    "ok": true,
+    "detail": "{\"entryText\":\"кю\",\"armed\":true,\"listening\":true,\"phrases\":[\"третий\",\"кю\"],\"learned\":[\"кю\"]}"
+  },
+  {
+    "name": "the assigned word now fires its key",
+    "ok": true,
+    "detail": "E"
+  },
+  {
+    "name": "dark theme applied without stopping",
+    "ok": true,
+    "detail": "{\"armed\":true,\"bg\":\"rgba(0, 0, 0, 0)\"}"
+  },
+  {
+    "name": "profile export and import round trip",
+    "ok": true,
+    "detail": "[\"Основной\",\"Основной (2)\"]"
+  },
+  {
+    "name": "no error entries in the log",
+    "ok": true
+  }
+]

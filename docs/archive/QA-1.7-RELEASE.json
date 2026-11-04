@@ -1,0 +1,28 @@
+[
+  {
+    "name": "data folder is next to the exe",
+    "ok": true,
+    "detail": "electron,logs,samples"
+  },
+  {
+    "name": "GigaAM bundled and found",
+    "ok": true
+  },
+  {
+    "name": "T-one not bundled (downloadable)",
+    "ok": true
+  },
+  {
+    "name": "GigaAM recognizes three words in the packaged build",
+    "ok": true,
+    "detail": "[\"Q\",\"W\",\"E\"]"
+  },
+  {
+    "name": "Vosk model loads from the bundled archive",
+    "ok": true
+  },
+  {
+    "name": "no errors in the log",
+    "ok": true
+  }
+]

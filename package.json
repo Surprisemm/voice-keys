@@ -1,0 +1,115 @@
+{
+  "name": "voice-keys",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Локальные голосовые команды: одна фраза — одна клавиша",
+  "license": "MIT",
+  "keywords": [
+    "voice-control",
+    "speech-recognition",
+    "electron",
+    "windows",
+    "dota-2",
+    "deadlock",
+    "iracing"
+  ],
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "setup": "node scripts/setup-models.js",
+    "test": "node --test",
+    "icon": "node scripts/make-icon.js",
+    "native": "node scripts/build-native.js",
+    "setup-ml": "node scripts/setup-ml.js",
+    "pack": "node scripts/pack.js",
+    "pack:dir": "electron-builder --win dir"
+  },
+  "dependencies": {
+    "koffi": "2.16.3",
+    "sherpa-onnx-node": "1.13.8",
+    "unbzip2-stream": "1.4.3",
+    "vosk-browser": "0.0.8"
+  },
+  "devDependencies": {
+    "electron": "38.8.6",
+    "electron-builder": "26.18.0"
+  },
+  "author": "Voice Keys authors",
+  "build": {
+    "appId": "local.voice-keys",
+    "productName": "Voice Keys",
+    "copyright": "Voice Keys",
+    "asar": false,
+    "npmRebuild": false,
+    "electronDist": "node_modules/electron/dist",
+    "electronVersion": "38.8.6",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "ui/**/*",
+      "scripts/**/*",
+      "package.json",
+      "!node_modules/koffi/build/koffi/!(win32_x64)/**",
+      "!node_modules/koffi/{src,vendor,doc}/**",
+      "!**/*.md",
+      "!**/test/**"
+    ],
+    "extraResources": [
+      {
+        "from": "tools/ml",
+        "to": "tools/ml",
+        "filter": [
+          "train_classifier.py",
+          "features.py",
+          "data.py",
+          "model.py"
+        ]
+      },
+      {
+        "from": "native/WasapiCapture.exe",
+        "to": "native/WasapiCapture.exe"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "Voice-Keys-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": false,
+      "shortcutName": "Voice Keys",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "artifactName": "Voice-Keys-Setup-${version}.exe",
+      "language": "1049",
+      "unicode": true,
+      "differentialPackage": false,
+      "include": "build/installer.nsh"
+    }
+  }
+}

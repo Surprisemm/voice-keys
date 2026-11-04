@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Voice Keys</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2224%22%20fill%3D%22%231f9d6b%22%2F%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2220%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/core.js"></script><script defer src="/microphones.js"></script>
+  <script defer src="/vosk.js"></script><script defer src="/app.js"></script><script defer src="/classifier.js"></script><script defer src="/data.js"></script>
+</head>
+<body>
+<main>
+  <header class="topbar">
+    <div class="identity"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="Voice Keys"><rect width="100" height="100" rx="24" fill="#1f9d6b"/><circle cx="50" cy="50" r="20" fill="#fff"/></svg><div><h1>Voice Keys</h1><p>Голос → нажатие или удержание</p></div></div>
+    <div class="run-controls"><div class="status-pill" id="status-pill"><span class="dot"></span><span id="status">Выключено</span></div><button class="button primary" id="start">Включить микрофон</button><button class="button stop hidden" id="stop">Остановить</button></div>
+  </header>
+  <div class="alert hidden" id="notice" role="status"></div>
+  <div class="model-banner hidden" id="model-banner" role="status"><span id="model-banner-text"></span><button class="button primary" id="model-banner-install" type="button">Скачать</button></div>
+  <section class="card main-card" aria-label="Основные настройки">
+    <div class="main-grid">
+      <label class="microphone-label">Микрофон<div class="mic-row"><select id="microphone" title="Микрофон Windows"><option value="">По умолчанию в Windows</option></select><button class="icon-button" id="refresh-mics" title="Получить доступ и обновить названия микрофонов" aria-label="Обновить микрофоны">↻</button></div><span id="active-microphone" class="device-hint">Названия доступны после доступа к микрофону.</span></label>
+      <label>Когда слушать<select id="listen-mode"><option value="hold">При удержании клавиши</option><option value="always">Постоянно</option></select></label>
+      <label class="hold-label">Клавиша<select id="hold-key"></select></label>
+      <label>Команды<select id="command-mode"><option value="phrase">Целая фраза</option><option value="words">Каждое слово отдельно</option></select></label>
+    </div>
+    <div class="settings-bottom"><span id="settings-note">Изменения сохраняются автоматически.</span><button class="button subtle save-button" id="save" hidden>Сохранить</button></div>
+  </section>
+  <section class="card profile-card" aria-label="Профили">
+      <div class="profile-bar"><label for="profile-select">Профиль</label><select id="profile-select"></select><button id="profile-new" class="small-button" title="Создать профиль">+ Новый</button><button id="profile-duplicate" class="small-button" title="Создать копию профиля: его команд и слов нейросети">Копия</button><button id="profile-rename" class="small-button" title="Переименовать профиль">Имя</button><button id="profile-delete" class="small-button" title="Удалить профиль">×</button><button id="profile-export" class="small-button" title="Сохранить профили в файл">Экспорт</button><button id="profile-import" class="small-button" title="Добавить профили из файла">Импорт</button><button id="net-badge" class="net-badge" type="button" hidden></button></div>
+  </section>
+  <div class="workspace">
+    <section class="card commands-card" id="commands-card">
+      <div class="section-heading"><div><h2>Команды <span id="count" class="count">0</span></h2><p id="commands-caption">Фраза целиком → одна клавиша</p></div><button class="button subtle" id="add">+ Добавить</button></div>
+      <div class="table-scroll"><table><thead><tr><th>Что сказать <span class="th-hint">· несколько слов через запятую</span></th><th class="language-cell">Язык</th><th class="key-column">Клавиша</th><th class="action-column">Действие</th><th class="remove-column"><span class="sr-only">Удаление</span></th></tr></thead><tbody id="mappings"></tbody></table></div>
+    </section>
+    <section class="card test-card" aria-label="Проверка голосовых команд">
+      <div class="section-heading"><h2>Проверка</h2><span class="local-badge">Локально</span></div>
+      <div class="output-switch" role="group" aria-label="Режим вывода"><button id="mode-preview" class="selected" aria-pressed="true">Только показать</button><button id="mode-keyboard" aria-pressed="false">Нажимать клавиши</button></div>
+      <p class="mode-description" id="mode-description">Результат виден здесь. Ввод в Windows выключен.</p>
+      <div class="key-stage" id="key-stage"><div class="keycap" id="last-key">—</div><div class="action-caption"><strong id="last-phrase">Жду команду</strong><span id="last-result">Скажите фразу и сделайте короткую паузу.</span></div></div>
+      <div id="active-keys" class="active-keys"></div>
+      <div id="latency" class="latency" aria-label="Задержка"></div>
+      <div id="pending-keys" class="pending-keys" aria-label="Ожидающие команды"></div>
+      <div class="heard"><span class="eyebrow">МОДЕЛЬ СЛЫШИТ</span><p id="heard-text">Ожидаем голос…</p><div id="decision-text">Клавиша нажимается после завершения фразы.</div></div>
+      <div class="meter" aria-label="Уровень микрофона"><div id="meter-fill"></div></div>
+      <div class="listen-status" id="listen-status">Микрофон выключен</div>
+      <details id="real-input" class="real-input"><summary>Проверка реального ввода</summary><label class="test-pad-label"><span class="sr-only">Поле реального ввода</span><textarea id="test-pad" rows="2" placeholder="Щёлкните здесь и произнесите команду." spellcheck="false"></textarea></label><div class="physical-note" id="physical-note">Здесь появится код полученной клавиши.</div></details>
+      <div class="shortcut-note">Остановка из любого окна: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F8</kbd></div>
+    </section>
+  </div>
+  <section class="card settings-section" id="settings-section" aria-label="Настройки">
+    <div class="section-heading"><div><h2>Настройки</h2><p>Распознавание, очередь и оверлей, звук и вид, записи голоса</p></div><button class="button subtle save-button" id="save-settings" hidden>Сохранить</button></div>
+    <details class="extra-settings settings-group" open><summary>Распознавание</summary>
+      <div class="recognition-grid">
+        <label>Язык<select id="language"><option value="ru">Русский</option><option value="en">English</option></select></label>
+        <select id="model" hidden><option value="vosk">Vosk Small · RU / EN</option><option value="gigaam">GigaAM v3 · RU</option><option value="sherpa">T-one Streaming · RU</option></select>
+        <div class="model-heading">Модель распознавания</div>
+        <div class="model-table" id="model-table" role="table" aria-label="Модели распознавания"></div>
+        <label title="Chromium — обычный захват через браузер. WASAPI — отдельная программа берёт звук напрямую у Windows с буфером около 10 мс; если она не запустится, используется Chromium.">Захват звука<select id="capture-mode"><option value="chromium">Chromium · обычный</option><option value="wasapi">WASAPI · напрямую</option></select></label>
+        <label>Уверенность<select id="confidence"><option value="0.85">От 85% · обычная</option><option value="0.95">От 95% · строгая</option><option value="0.75">От 75% · мягкая</option></select></label>
+        <label>Стабилизация слова, мс<input id="word-stability" type="number" min="0" max="500" step="10" value="100"></label>
+        <label class="checkbox" title="Команда нажимается, когда первые 3 буквы слова подходят ровно одной команде. Если начало подходит нескольким, программа ждёт конец слова."><input id="prefix-match" type="checkbox" checked>Срабатывание по началу слова (3 буквы)</label>
+        <label>Пауза фразы, мс<input id="speech-end" type="number" min="120" max="1500" step="10" value="250"></label>
+      </div>
+      <p id="recognition-hint" class="recognition-hint">Фраза выполняется после короткой паузы.</p>
+    </details>
+    <details class="extra-settings settings-group" open><summary>Очередь и оверлей</summary><div class="overlay-settings">
+      <label>Интервал команд, мс<input id="queue-gap" type="number" min="20" max="1000" step="10"></label>
+      <label class="checkbox"><input id="overlay-enabled" type="checkbox">Показывать оверлей</label>
+      <label>Направление<select id="overlay-orientation"><option value="horizontal">Горизонтально</option><option value="vertical">Вертикально</option></select></label>
+      <label>Положение<select id="overlay-anchor"><option value="top">Сверху</option><option value="bottom">Снизу</option><option value="left">Слева</option><option value="right">Справа</option></select></label>
+      <label>Сдвиг X, px<input id="overlay-x" type="number" min="-10000" max="10000"></label><label>Сдвиг Y, px<input id="overlay-y" type="number" min="-10000" max="10000"></label>
+      <label>Размер, px<input id="overlay-size" type="number" min="28" max="80"></label><label>Исчезает через, мс<input id="overlay-retention" type="number" min="500" max="15000" step="100"></label>
+    </div><div class="overlay-description"><span>Ожидает — ярко. Нажата — 50%. Оверлей пропускает клики мыши.</span><button id="overlay-demo" class="button subtle">Показать пример</button></div></details>
+    <details class="extra-settings settings-group" open><summary>Звук, вид и трей</summary><div class="ui-settings">
+      <label class="checkbox"><input id="sound-enabled" type="checkbox">Звуковой сигнал</label>
+      <label class="checkbox"><input id="sound-match" type="checkbox">Когда команда распознана</label>
+      <label class="checkbox"><input id="sound-press" type="checkbox">Когда нажата клавиша</label>
+      <label class="volume-label">Громкость<input id="sound-volume" type="range" min="0" max="100" step="5"></label>
+      <label>Тема<select id="theme"><option value="system">Как в Windows</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select></label>
+      <label class="checkbox"><input id="close-to-tray" type="checkbox">Закрытие окна сворачивает в трей</label>
+      <button id="sound-test" class="button subtle" type="button">Проверить звук</button>
+    </div><p class="ui-note">Эти параметры применяются сразу и не прерывают прослушивание. Сигналы слышит и микрофон: в наушниках они не мешают распознаванию.</p></details>
+    <details class="extra-settings settings-group" id="data-panel"><summary>Данные и запуск</summary><div class="cls">
+      <p class="cls-help" id="data-where">Папка данных: …</p>
+      <div class="cls-add"><button class="button subtle" id="data-open">Открыть папку</button><button class="button subtle" id="data-import">Перенести данные из другой папки…</button></div>
+      <label class="checkbox cls-enable" id="autostart-label"><input id="autostart" type="checkbox">Запускать вместе с Windows (свернуто в трей)</label>
+      <p class="cls-help" id="data-version"></p>
+    </div></details>
+    <details class="extra-settings settings-group" id="classifier-panel"><summary>Свой классификатор голоса</summary><div class="cls">
+      <label class="checkbox cls-enable" title="Работает вместе с обычным распознаванием: команду нажимает тот, кто узнал её первым, второе нажатие отменяется."><input id="classifier-enabled" type="checkbox">Использовать быстрый классификатор вместе с обычным распознаванием</label>
+      <p class="cls-help">Маленькая нейросеть, обученная на вашем голосе, узнаёт команды по первому слогу, раньше обычного распознавания. Вы выбираете профиль, записываете его слова (каждое около 30 раз), один раз записываете фон и обучаете сеть профиля. Записи хранятся только на этом компьютере.</p>
+      <div class="cls-head"><div class="cls-now" id="cls-now"></div><button class="help-dot" id="cls-help-btn" type="button" aria-expanded="false" aria-controls="cls-howto" title="Как это работает: выберите профиль, впишите и проговорите его слова около 30 раз, запишите фон, обучите сеть. После новых слов или записей сеть нужно переобучить. Нажмите, чтобы открыть подробную инструкцию.">i</button></div>
+      <div class="cls-howto" id="cls-howto" hidden><h4>Как работать с классификатором</h4><ol><li><b>Python и PyTorch</b> (шаг 1): установите один раз; пока их нет, остальные шаги закрыты.</li><li><b>Профиль</b> (шаг 2): «Общий» есть всегда, его нельзя удалить, он знает все записанные слова и обучается одной общей сетью. Для каждой игры можно создать свой профиль или сделать копию существующего: у него свои команды, свой набор слов и своя сеть.</li><li><b>Слова</b> (шаг 3): впишите слово и проговорите его около 30 раз. «Записать ещё» добавляет повторения, «Перезаписать» стирает старые и записывает заново, × убирает слово из профиля. Записанное слово можно добавить и в другой профиль списком «＋ из библиотеки»: записывать его заново не нужно.</li><li><b>Фон</b> (шаг 4): 3–5 минут обычной речи, звука игры и клавиатуры без команд. Фон один на все профили, его записывают один раз.</li><li><b>Обучение</b> (шаг 5): «Обучить» учит сеть выбранного профиля на его словах. После новых слов или новых повторов сеть нужно переобучить.</li><li><b>Команды</b>: в строке команды, в блоке «Нейросеть», выберите слова профиля, которые её запускают. Текстовое поле выше остаётся для обычного распознавания. Включите флажок «Использовать быстрый классификатор».</li></ol><p>Если сеть и текстовое распознавание услышали одну команду, нажимается она один раз, по тому, кто услышал первым. Если ничего не узнано, ничего не нажимается.</p><p><span class="cls-key good">зелёное</span> слово записано полностью и сеть его знает, <span class="cls-key warn">жёлтое</span> слово недозаписано или сеть устарела, <span class="cls-key bad">красное</span> слово не записано или сеть не обучена.</p></div>
+      <section class="cls-step" id="cls-step-env">
+        <h3 class="cls-title"><span class="cls-num">1</span>Python и PyTorch<span class="cls-badge" id="cls-env-badge"></span></h3>
+        <p class="cls-help">Обучение идёт на PyTorch (на видеокарте NVIDIA, если она есть). Ставится один раз, около 2 ГБ. Пока окружения нет, шаги 2–5 закрыты.</p>
+        <div class="cls-ml"><span id="cls-ml-text">Проверяю окружение для обучения…</span><button class="button subtle" id="cls-ml-install" hidden>Установить Python и PyTorch</button></div>
+        <pre class="cls-log" id="cls-setup-log" hidden></pre>
+      </section>
+      <p class="cls-lock-note" id="cls-lock-note" hidden>Шаги 2–5 откроются после установки Python и PyTorch.</p>
+      <div class="cls-message" id="cls-message" hidden></div>
+      <fieldset class="cls-locked" id="cls-locked" disabled>
+        <section class="cls-step">
+          <h3 class="cls-title"><span class="cls-num">2</span>Профиль<span class="cls-badge" id="cls-profile-badge"></span></h3>
+          <p class="cls-help">У каждого профиля свои команды, свой набор слов и своя сеть. Точка показывает сеть: зелёная — обучена, жёлтая — устарела, красная — не обучена.</p>
+          <div class="cls-profiles" id="cls-profiles" role="tablist" aria-label="Профили"></div>
+          <div class="cls-add"><button class="button subtle" id="cls-profile-new" type="button">＋ Новый</button><button class="button subtle" id="cls-profile-duplicate" type="button">Дублировать</button><button class="button subtle" id="cls-profile-rename" type="button">Имя</button><button class="button subtle" id="cls-profile-delete" type="button">Удалить</button></div>
+          <div class="cls-sub" id="cls-profile-note"></div>
+        </section>
+        <section class="cls-step">
+          <h3 class="cls-title"><span class="cls-num">3</span>Слова профиля<span class="cls-badge" id="cls-words-badge"></span></h3>
+          <p class="cls-help" id="cls-words-help">Впишите слово и проговорите его: программа запишет нужное число повторений. Слово можно добавить в профиль из библиотеки (уже записанные слова), убрать из профиля или записать заново.</p>
+          <div class="cls-add"><input id="cls-new-word" maxlength="30" placeholder="Новое слово, например: первый" aria-label="Новое слово"><label class="cls-inline">Повторений<input id="cls-takes" type="number" min="5" max="100" step="5" value="30"></label><button class="button subtle" id="cls-add-word" type="button">Записать слово</button><select id="cls-library" aria-label="Добавить слово из библиотеки"></select></div>
+          <div id="cls-words" class="cls-words"></div>
+          <div class="cls-warn" id="cls-words-warn" hidden></div>
+        </section>
+        <section class="cls-step">
+          <h3 class="cls-title"><span class="cls-num">4</span>Фон<span class="cls-badge" id="cls-bg-badge"></span></h3>
+          <p class="cls-help">Всё, что не является командой: обычный разговор, чат в игре, звук игры и музыки из колонок, клавиатура, мышь, дыхание, тишина. Чем разнообразнее, тем меньше ложных нажатий. Фон один на все профили: его записывают один раз (лучше несколько раз в разных условиях).</p>
+          <div class="cls-add"><label class="cls-inline">Длительность<select id="cls-bg-seconds"><option value="60">1 минута</option><option value="120" selected>2 минуты</option><option value="180">3 минуты</option><option value="300">5 минут</option></select></label><button class="button subtle" id="cls-bg-record" type="button">Записать фон</button><button class="button subtle" id="cls-bg-clear" type="button">Удалить фон</button><span id="cls-bg-info" class="cls-sub"></span></div>
+        </section>
+        <section class="cls-step">
+          <h3 class="cls-title"><span class="cls-num">5</span>Обучение<span class="cls-badge" id="cls-train-badge"></span></h3>
+          <p class="cls-help" id="cls-train-help">Сеть выбранного профиля учится на его словах и общем фоне.</p>
+          <div class="cls-add"><label class="cls-inline">Качество<select id="cls-quality"><option value="fast">Быстро</option><option value="normal" selected>Обычное</option><option value="best">Лучшее (дольше)</option></select></label><button class="button primary" id="cls-train" type="button">Обучить</button><button class="button stop" id="cls-cancel" type="button" hidden>Отмена</button><button class="small-button" id="cls-model-remove" type="button" hidden title="Удалить обученную сеть профиля (записи останутся)">Удалить сеть</button></div>
+          <div class="cls-warn" id="cls-train-warn" hidden></div>
+          <progress id="cls-progress" max="1" value="0" hidden></progress><div class="cls-sub" id="cls-progress-text"></div>
+          <pre class="cls-log" id="cls-result"></pre>
+          <div class="cls-sub" id="cls-model-line"></div>
+        </section>
+      </fieldset>
+    </div></details>
+    <details class="extra-settings settings-group" id="samples-panel"><summary>Образцы голоса и замер скорости</summary><p class="sample-help">Запишите слово или несколько команд. Запись сохраняется локально в этом профиле. Замер сравнивает обработку готовой записи и не нажимает клавиши; модель от записи не обучается.</p><div class="sample-record-row"><label>Что произнесёте<input id="sample-text" maxlength="300" placeholder="Например: первый первый второй"></label><button id="sample-record" class="button subtle">● Записать</button></div><div class="sample-test-row"><select id="sample-select" aria-label="Записанный образец"></select><button id="sample-play" class="small-button">Прослушать</button><button id="sample-test" class="button subtle">Замерить</button><button id="sample-delete" class="small-button">Удалить</button></div><p id="sample-result" role="status">Запишите несколько вариантов произношения для сравнения.</p></details>
+  </section>
+  <dialog id="enroll-dialog"><div class="enroll"><h2>Запись произношения</h2><p id="enroll-target" class="enroll-target"></p><div id="enroll-prompt" class="enroll-prompt" role="status"></div><div id="enroll-dots" class="enroll-dots"></div><p id="enroll-partial" class="enroll-partial">…</p><div class="meter"><div id="enroll-meter"></div></div><p id="enroll-note" class="enroll-note" role="status"></p><div class="dialog-buttons"><button type="button" id="enroll-cancel" class="button subtle">Закрыть</button><button type="button" id="enroll-retry" class="button subtle hidden">Заново</button><button type="button" id="enroll-apply" class="button primary hidden">Добавить</button></div></div></dialog>
+  <dialog id="profile-dialog"><form method="dialog"><h2 id="profile-dialog-title">Новый профиль</h2><label id="profile-name-label">Название<input id="profile-name" maxlength="40" required autocomplete="off"></label><label id="profile-copy-label" class="checkbox"><input id="profile-copy" type="checkbox">Скопировать текущие команды</label><p id="profile-delete-note" class="hidden">Профиль будет удалён. Записи голоса останутся в папке данных.</p><div class="dialog-buttons"><button value="cancel" class="button subtle" formnovalidate>Отмена</button><button value="ok" class="button primary" id="profile-confirm">Создать</button></div></form></dialog>
+  <section class="card history-card"><div class="history-heading"><h2>Журнал <span id="history-count" class="count">0</span></h2><div class="history-tools"><label class="checkbox"><input id="show-rejected" type="checkbox" checked>Отклонённые</label><button class="text-button" id="open-logs">Папка логов ↗</button><button class="text-button" id="clear-history">Очистить экран</button></div></div><div id="history" role="log" aria-live="polite"><p class="empty-history">Здесь будут принятые и отклонённые команды.</p></div><p id="log-location" class="log-location">Аудио сохраняется локально только по кнопке «Записать».</p></section>
+  <footer><span>Слова или фразы · нажатие или удержание</span><span id="version-note">Voice Keys</span></footer>
+</main>
+</body>
+</html>
