@@ -2,7 +2,13 @@
 
 [Русская версия](README.md)
 
-A voice controller for Windows: say a word and the program presses a key (or holds it, or toggles it). Made for games where your hands are busy: Dota 2, Deadlock, iRacing and others. Everything runs locally; your voice is never sent anywhere.
+A voice controller for Windows: say a word and the program presses a key (or holds it, or toggles it). Everything runs locally; your voice is never sent anywhere.
+
+## About
+
+This is a personal project: I built it for myself, as a person with a disability, to interact with my computer more comfortably and to press keys in games (Dota 2, Deadlock, iRacing and others) without using my hands. The app was "vibe-coded" with Claude and ChatGPT: I set the tasks and checked the results, the models wrote the code. It is not only for games: it is just as useful for everyday work at the computer, since any word can be bound to any key or key combination, mouse button or wheel.
+
+The project is shared as is, without warranty, in the hope that it helps others too. Suggestions and bug reports are welcome in [Issues](https://github.com/Surprisemm/voice-keys/issues).
 
 - **Three actions:** tap, hold for a set time, or toggle (the key stays down until you say the command again).
 - **Profiles** per game. A fresh install has a single "General" profile that cannot be deleted (it holds the Deadlock commands); you add the others. A profile holds its commands and the words of its neural network; model, language and microphone are shared.
