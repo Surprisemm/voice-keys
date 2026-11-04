@@ -6,12 +6,18 @@ A voice controller for Windows: say a word and the program presses a key (or hol
 
 ## About
 
-This is a personal project: I built it for myself, as a person with a disability, to interact with my computer more comfortably and to press keys in games (Dota 2, Deadlock, iRacing and others) without using my hands. The app was "vibe-coded" with Claude and ChatGPT: I set the tasks and checked the results, the models wrote the code. It is not only for games: it is just as useful for everyday work at the computer, since any word can be bound to any key or key combination, mouse button or wheel.
+This is a personal project: I built it for myself, as a person with a disability, to interact with my computer more comfortably and to press keys in games without using my hands. The app was "vibe-coded" with Claude and ChatGPT: I set the tasks and checked the results, the models wrote the code. It is not only for games: it is just as useful for everyday work at the computer, since any word can be bound to any key or key combination, mouse button or wheel.
 
 The project is shared as is, without warranty, in the hope that it helps others too. Suggestions and bug reports are welcome in [Issues](https://github.com/Surprisemm/voice-keys/issues).
 
+## Fair play
+
+The app is deliberately simple: **one command, one action**. A word presses one key, or a key with the Ctrl, Alt or Shift modifiers, holds it, or toggles it. There are no macros, key sequences, repeats or scripts, and I left them out on purpose so that the app gives no unfair advantage in games.
+
+Also, whichever recognition is used, a speech-to-text model or the trained neural network, the app has a delay: the word has to be spoken and recognised. In our measurements the network reacts about 0.1 s after the start of the word, the speech-to-text models usually after 0.3-0.5 s, and a pause is kept between key presses (80 ms by default). So the app cannot press keys faster than a healthy person could by hand: it is a way to press keys by voice, not a way to speed up play.
+
 - **Three actions:** tap, hold for a set time, or toggle (the key stays down until you say the command again).
-- **Profiles** per game. A fresh install has a single "General" profile that cannot be deleted (it holds the Deadlock commands); you add the others. A profile holds its commands and the words of its neural network; model, language and microphone are shared.
+- **Profiles** per game. A fresh install has a single "General" profile that cannot be deleted (it holds a few example commands); you add the others. A profile holds its commands and the words of its neural network; model, language and microphone are shared.
 - **Three speech models**, downloaded inside the app: GigaAM v3 (Russian, the most accurate), Vosk Small (Russian and English), T-one (Russian).
 - **Personal voice classifier:** a small neural network trained on your own recordings. It recognises a command from its first syllable, before the speech model does. Train one network per profile or one shared network. Whoever recognises a command first presses it, once.
 - On-screen overlay with the key queue, low-latency WASAPI capture, tray icon, start with Windows.

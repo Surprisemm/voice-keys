@@ -7,11 +7,9 @@
   "keywords": [
     "voice-control",
     "speech-recognition",
+    "accessibility",
     "electron",
-    "windows",
-    "dota-2",
-    "deadlock",
-    "iracing"
+    "windows"
   ],
   "main": "src/main.js",
   "scripts": {
