@@ -1,6 +1,6 @@
 {
   "name": "voice-keys",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Локальные голосовые команды: одна фраза — одна клавиша",
   "license": "MIT",
