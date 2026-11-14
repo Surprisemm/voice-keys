@@ -254,15 +254,18 @@
       const counts = new Map(), present = new Set(); let blocked = false, anyCommand = false;
       for (let index = 0; index < tokens.length; index++) {
         const hit = this.resolve(tokens[index], !final && index === tokens.length - 1); if (!hit) continue;
-        const { word, candidate } = hit;
-        const occurrence = (counts.get(word) || 0) + 1; counts.set(word, occurrence);
+        const { candidate } = hit;
+        // Repeats are counted per action, not per spelling: when the model rewrites a word it is still saying ("тяж" -> "тяш",
+        // both variants of one command), it is the same occurrence and is not pressed again; saying the word twice is two occurrences.
+        const action = actionIdentity(candidate);
+        const occurrence = (counts.get(action) || 0) + 1; counts.set(action, occurrence);
         anyCommand = true;
-        const identity = `${word}:${occurrence}`; present.add(identity);
+        const identity = `${action}:${occurrence}`; present.add(identity);
         if (!this.pending.has(identity)) this.pending.set(identity, now);
-        if (occurrence <= (this.emitted.get(word) || 0)) continue;
+        if (occurrence <= (this.emitted.get(action) || 0)) continue;
         const needed = hit.ambiguous ? Math.max(this.stability, this.ambiguousWait) : this.stability;
         if (blocked || !final && now - this.pending.get(identity) < needed) { blocked = true; continue; }
-        this.emitted.set(word, occurrence);
+        this.emitted.set(action, occurrence);
         result.actions.push(buildAction(candidate, { confidence: null, provisional: !final, stabilityMs: now - this.pending.get(identity), firstSeenAt: this.pending.get(identity), occurrence, byPrefix: Boolean(hit.prefix), heard: tokens[index] }));
       }
       for (const identity of this.pending.keys()) if (!present.has(identity)) this.pending.delete(identity);

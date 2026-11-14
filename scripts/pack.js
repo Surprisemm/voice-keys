@@ -15,7 +15,7 @@ fs.rmSync(path.join(release, 'win-unpacked'), { recursive: true, force: true });
 run(path.join(root, 'node_modules', 'electron-builder', 'cli.js'), ['--win', 'nsis', 'portable']);
 
 // the unpacked folder is only a build step (use `npm run pack:dir` when it is wanted for testing); the leftovers of the builder are noise
-for (const leftover of ['win-unpacked', 'builder-debug.yml', 'builder-effective-config.yaml']) fs.rmSync(path.join(release, leftover), { recursive: true, force: true });
+for (const leftover of ['win-unpacked', 'builder-debug.yml', 'builder-effective-config.yaml', 'latest.yml']) fs.rmSync(path.join(release, leftover), { recursive: true, force: true });
 for (const name of fs.readdirSync(release)) if (name.endsWith('.blockmap')) fs.rmSync(path.join(release, name), { force: true });
 
 fs.writeFileSync(path.join(release, 'README.txt'), `Voice Keys ${version} — Windows 10/11 x64. Node.js, Python и интернет для работы не нужны.

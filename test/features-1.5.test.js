@@ -68,13 +68,15 @@ test('an action with another modifier set waits, so a held Ctrl never leaks into
   const order = events.map(event => event.join(':'));
   assert.ok(order.indexOf('up:CTRL') < order.indexOf('down:W'), order.join(' '));
 });
-test('modifiers held by the controller do not count as manual input, physical ones do', async t => {
-  const seen = []; let physical = false;
-  const { input, events } = controller(t, { modifiersDown: exclude => (seen.push([...exclude]), physical) });
-  const hold = input.perform({ key: 'Q', modifiers: ['CTRL'], durationMs: 500 }), second = input.perform({ key: 'W', modifiers: ['CTRL'], durationMs: 65 });
-  t.mock.timers.tick(100); await second; assert.ok(seen.some(list => list.includes('CTRL')));
-  physical = true; const blocked = input.perform({ key: 'E', modifiers: ['CTRL'], durationMs: 65 }); t.mock.timers.tick(500); await hold;
-  t.mock.timers.tick(200); assert.equal(events.some(event => event[1] === 'E'), false); physical = false; t.mock.timers.tick(40); t.mock.timers.tick(65); assert.equal((await blocked).ok, true);
+test('a modifier held by hand is not pressed again by a command that needs it, and stays held after it', async t => {
+  const physical = new Set(['CTRL']);
+  const { input, events } = controller(t, { isDown: key => physical.has(key) });
+  const result = input.perform({ key: 'E', modifiers: ['CTRL'], durationMs: 65 });
+  assert.deepEqual(events, [['down', 'E']], 'pressed at once, without a second Ctrl');
+  t.mock.timers.tick(65); assert.equal((await result).ok, true);
+  assert.deepEqual(events, [['down', 'E'], ['up', 'E']], 'the hand-held Ctrl is not released');
+  physical.clear(); const own = input.perform({ key: 'E', modifiers: ['CTRL'], durationMs: 65 }); t.mock.timers.tick(100); t.mock.timers.tick(65); await own;
+  assert.deepEqual(events.slice(2), [['down', 'CTRL'], ['down', 'E'], ['up', 'E'], ['up', 'CTRL']], 'without the hand it presses and releases its own Ctrl');
 });
 test('emergency stop releases held modifiers too', async t => {
   const { input, events } = controller(t); const result = input.perform({ key: 'Q', modifiers: ['CTRL', 'ALT'], durationMs: 5000 });

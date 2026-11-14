@@ -87,6 +87,7 @@ test('emergency stop releases all keys and cancels waiting commands', async t =>
   assert.equal((await one).cancelled,true); assert.equal((await two).actualDurationMs,120); assert.equal((await queued).cancelled,true);
   t.mock.timers.tick(2000); assert.equal(events.filter(event=>event[0]==='down').length,2);
 });
-test('manual modifiers defer a command until released instead of discarding it', async t => {
-  let held=true;const {input,events}=controller(t,{modifiersDown:()=>held});const result=input.perform({key:'Q',durationMs:65});assert.deepEqual(events,[]);held=false;t.mock.timers.tick(20);assert.equal(events[0][0],'down');t.mock.timers.tick(65);assert.equal((await result).ok,true);
+test('Ctrl/Shift/Alt held by hand do not delay commands: they are pressed at once, in order', async t => {
+  const {input,events}=controller(t,{modifiersDown:()=>true});const first=input.perform({key:'Q',durationMs:65}),second=input.perform({key:'W',durationMs:65});
+  assert.deepEqual(events.map(e=>e.slice(0,2)),[['down','Q'],['down','W']]);t.mock.timers.tick(65);assert.equal((await first).ok,true);assert.equal((await second).ok,true);
 });

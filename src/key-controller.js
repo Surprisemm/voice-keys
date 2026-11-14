@@ -7,6 +7,8 @@ const { KEYS, MODIFIERS, monotonicNow } = require('./core');
 // cannot turn an unrelated plain command into Ctrl+command.
 function createKeyController(adapter, { now = monotonicNow, gapMs = 0, releaseGapMs = 0 } = {}) {
   const active = new Map(), queue = [], releasedAt = new Map(), heldModifiers = new Map();
+  // modifiers that the user already holds by hand when a command needs them: not pressed again and never released by this controller
+  const borrowed = new Set();
   let timer = null, nextStart = 0, cancelling = false, watchTimer = null;
   const TOGGLE_WATCH_MS = 40, TOGGLE_GRACE_MS = 150;
   const interval = () => typeof gapMs === 'function' ? gapMs() : gapMs;
@@ -18,7 +20,10 @@ function createKeyController(adapter, { now = monotonicNow, gapMs = 0, releaseGa
     const pressed = [];
     for (const name of names) {
       const count = heldModifiers.get(name) || 0;
-      if (count === 0 && !adapter.down(name)) { for (const done of pressed) dropModifier(done); return false; }
+      if (count === 0) {
+        if (adapter.isDown(name)) borrowed.add(name);
+        else if (!adapter.down(name)) { for (const done of pressed) dropModifier(done); return false; }
+      }
       heldModifiers.set(name, count + 1); pressed.push(name);
     }
     return true;
@@ -26,7 +31,7 @@ function createKeyController(adapter, { now = monotonicNow, gapMs = 0, releaseGa
   function dropModifier(name) {
     const count = (heldModifiers.get(name) || 0) - 1;
     if (count > 0) { heldModifiers.set(name, count); return true; }
-    heldModifiers.delete(name); return release(name);
+    heldModifiers.delete(name); if (borrowed.delete(name)) return true; return release(name);
   }
   // A toggled key stays down until the command is said again or the user presses the key himself: his press and release
   // lift it in Windows, and the key then reads as up although this program never released it.
@@ -59,9 +64,9 @@ function createKeyController(adapter, { now = monotonicNow, gapMs = 0, releaseGa
     if (active.size && !sameSet(task.modifiers, held())) return;
     const delay = Math.max(nextStart - now(), (releasedAt.get(task.key) ?? -Infinity) + releaseGapMs - now());
     if (delay > 0) { schedule(delay); return; }
-    // Defer rather than discard a recognized command when manual input is held. Modifiers held by this
-    // controller are ours and do not count.
-    if (adapter.modifiersDown(held()) || adapter.isDown(task.key)) { schedule(20); return; }
+    // Ctrl/Shift/Alt held by hand do not delay a command: it is pressed at once and the game sees the combination (Ctrl+1).
+    // Only the command's own key, held by hand, is waited for: it cannot be pressed twice.
+    if (adapter.isDown(task.key)) { schedule(20); return; }
     queue.shift();
     if (!pressModifiers(task.modifiers)) { task.resolve({ ok: false, reason: 'Windows отклонила ввод модификатора. Проверьте уровень прав приложения.' }); pump(); return; }
     if (!adapter.down(task.key)) {
